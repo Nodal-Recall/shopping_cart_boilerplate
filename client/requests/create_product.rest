@@ -1,0 +1,8 @@
+POST http://localhost:5001/api/products
+Content-Type: application/json
+
+{
+  "title": "Mac Mini",
+  "price": 850,
+  "quantity": 7
+}

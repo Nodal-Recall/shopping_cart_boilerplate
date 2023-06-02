@@ -24,20 +24,12 @@ const Product = ({
     onAddToCart(id);
   };
 
-  const makeRed = (quantity) => {
-    if (quantity === 0) {
-      return "quantity none-left";
-    }
-
-    return "quantity";
-  };
-
   return (
     <li className="product">
       <div className="product-details">
         <h3>{name}</h3>
         <p className="price">${price} </p>
-        <p className={makeRed(quantity)}>
+        <p className={quantity === 0 ? "quantity none-left" : "quantity"}>
           {quantity} left in stock
         </p>
         <div className="actions product-actions">

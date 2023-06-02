@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 const CartProduct = ({ name, price, quantity }) => {
   return (
     <tr>

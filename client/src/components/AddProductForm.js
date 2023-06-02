@@ -24,11 +24,8 @@ const AddProductForm = ({ onSubmit }) => {
     onSubmit({ title: name, price, quantity }, reset);
   }
 
-  const visibilityClass = formVisible ?
-    'add-form visible' : 'add-form';
-
   return (
-    <div className={visibilityClass}>
+    <div className={formVisible ? 'add-form visible' : 'add-form'}>
       <p>
         <button
           className="add-product-button"

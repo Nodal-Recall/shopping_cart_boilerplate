@@ -27,7 +27,7 @@ const Cart = ({ cart, onCheckout }) => {
         <tfoot>
           <tr>
             <td colSpan="3" className="total">
-              Total: ${cart.reduce((acc, curr) => acc + curr.price*curr.quantity, 0)}
+              Total: ${cart.reduce((acc, curr) => acc + curr.price * curr.quantity, 0)}
             </td>
           </tr>
         </tfoot>

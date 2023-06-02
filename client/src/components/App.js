@@ -26,17 +26,13 @@ const App = () => {
     (async () => {
       let products = await productService.getAll();
       setProducts(products);
-    })();
-  }, []);
 
-  useEffect(() => {
-    (async () => {
       let cart = await cartService.getAll();
       setCart(cart);
     })();
   }, []);
 
-  const handleSubmit = async (newProduct, callback) => {
+  const handleSubmitAddProduct = async (newProduct, callback) => {
     try {
       const createdProduct = await productService.create(newProduct);
       setProducts((prevState) => prevState.concat(createdProduct));
@@ -49,7 +45,7 @@ const App = () => {
     }
   }
 
-  const handleSubmitEdit = async (updatedProduct, callback) => {
+  const handleSubmitEditProduct = async (updatedProduct, callback) => {
     try {
       const id = updatedProduct.id;
       const product = {
@@ -64,9 +60,9 @@ const App = () => {
         return prevState.map((p) => {
           if (p._id === id) {
             return response;
-          } else {
-            return p;
           }
+
+          return p;
         })
       })
 
@@ -85,6 +81,10 @@ const App = () => {
       setProducts((prevState) => {
         return prevState.filter((p) => p._id !== id)
       });
+
+      setCart((prevState) => {
+        return prevState.filter((p) => p.productId !== id)
+      })
     } catch(error) {
       console.log(error);
     }
@@ -114,14 +114,8 @@ const App = () => {
       });
 
       setProducts((prevState) => {
-        return prevState.map((p) => {
-          if (p._id === id) {
-            return product;
-          } else {
-            return p;
-          }
-        })
-      })
+        return prevState.map((p) => p._id === id ? product : p);
+      });
     } catch(error) {
       console.log(error);
     }
@@ -145,11 +139,11 @@ const App = () => {
       <main>
         <ProductListing
           products={products}
-          onSubmitEdit={handleSubmitEdit}
+          onSubmitEdit={handleSubmitEditProduct}
           onDelete={handleDelete}
           onAddToCart={handleAddToCart}/>
       </main>
-      <AddProductForm onSubmit={handleSubmit} />
+      <AddProductForm onSubmit={handleSubmitAddProduct} />
     </div>
   );
 };

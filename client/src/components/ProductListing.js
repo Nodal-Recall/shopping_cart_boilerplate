@@ -2,7 +2,7 @@ import React from "react";
 
 import Product from './Product.js';
 
-const ProductListing = ({ products, onSubmitEdit, onDelete }) => {
+const ProductListing = ({ products, onSubmitEdit, onDelete, onAddToCart }) => {
   return (
     <div className="product-listing">
       <h2>Products</h2>
@@ -17,6 +17,7 @@ const ProductListing = ({ products, onSubmitEdit, onDelete }) => {
               quantity={quantity}
               onSubmitEdit={onSubmitEdit}
               onDelete={onDelete}
+              onAddToCart={onAddToCart}
             />
           );
         })}

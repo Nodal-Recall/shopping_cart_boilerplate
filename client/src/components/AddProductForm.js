@@ -14,6 +14,8 @@ const AddProductForm = ({ onSubmit }) => {
     setName("");
     setPrice("");
     setQuantity("");
+
+    onToggleVisibility();
   }
 
   const onSubmitForm = (e) => {

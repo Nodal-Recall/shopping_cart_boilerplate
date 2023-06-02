@@ -1,28 +1,38 @@
 import { useState, useEffect } from "react";
 
+import Cart from "./Cart";
 import ProductListing from './ProductListing'
 import AddProductForm from './AddProductForm'
 
 import productService from '../services/products'
+import cartService from '../services/cart'
 
-const Header = () => {
+const Header = ({ cart, onCheckout }) => {
   return (
     <header>
       <h1>The Shop!</h1>
-      <p>Your cart is empty</p>
-      <p>Total: $0</p>
-      <button className="checkout" disabled>Checkout</button>
+      <Cart
+        cart={cart}
+        onCheckout={onCheckout} />
     </header>
   );
 };
 
 const App = () => {
   const [products, setProducts] = useState([]);
+  const [cart, setCart] = useState([]);
 
   useEffect(() => {
     (async () => {
       let products = await productService.getAll();
       setProducts(products);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      let cart = await cartService.getAll();
+      setCart(cart);
     })();
   }, []);
 
@@ -80,14 +90,64 @@ const App = () => {
     }
   }
 
+  const handleAddToCart = async (id) => {
+    try {
+      const { product, item } = await cartService.add(id);
+
+      setCart((prevState) => {
+        let quantityUpdated = false;
+
+        const newCart = prevState.map((i) => {
+          if (i.productId === id) {
+            quantityUpdated = true;
+            return item;
+          } else {
+            return i;
+          }
+        })
+
+        if (quantityUpdated) {
+          return newCart;
+        }
+
+        return prevState.concat(item);
+      });
+
+      setProducts((prevState) => {
+        return prevState.map((p) => {
+          if (p._id === id) {
+            return product;
+          } else {
+            return p;
+          }
+        })
+      })
+    } catch(error) {
+      console.log(error);
+    }
+  };
+
+  const handleCheckout = async () => {
+    try {
+      await cartService.clear();
+
+      setCart([]);
+    } catch(error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="comments">
-      <Header />
+      <Header
+        cart={cart}
+        onCheckout={handleCheckout} />
       <main>
         <ProductListing
           products={products}
           onSubmitEdit={handleSubmitEdit}
-          onDelete={handleDelete} />
+          onDelete={handleDelete}
+          onAddToCart={handleAddToCart}/>
       </main>
       <AddProductForm onSubmit={handleSubmit} />
     </div>

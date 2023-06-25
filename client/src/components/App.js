@@ -4,8 +4,15 @@ import Cart from "./Cart";
 import ProductListing from './ProductListing'
 import AddProductForm from './AddProductForm'
 
-import productService from '../services/products'
-import cartService from '../services/cart'
+import {
+  getAllProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getAllItems,
+  addItem,
+  clearCart,
+} from '../services/products'
 
 const Header = ({ cart, onCheckout }) => {
   return (
@@ -24,17 +31,17 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      let products = await productService.getAll();
+      let products = await getAllProducts();
       setProducts(products);
 
-      let cart = await cartService.getAll();
+      let cart = await getAllItems();
       setCart(cart);
     })();
   }, []);
 
   const handleSubmitAddProduct = async (newProduct, callback) => {
     try {
-      const createdProduct = await productService.create(newProduct);
+      const createdProduct = await createProduct(newProduct);
       setProducts((prevState) => prevState.concat(createdProduct));
 
       if (callback) {
@@ -54,7 +61,7 @@ const App = () => {
         quantity: updatedProduct.quantity
       }
 
-      const response = await productService.update(id, product)
+      const response = await updateProduct(id, product)
 
       setProducts((prevState) => {
         return prevState.map((p) => {
@@ -76,7 +83,7 @@ const App = () => {
 
   const handleDelete = async (id) => {
     try {
-      await productService.deleteProduct(id);
+      await deleteProduct(id);
 
       setProducts((prevState) => {
         return prevState.filter((p) => p._id !== id)
@@ -92,7 +99,7 @@ const App = () => {
 
   const handleAddToCart = async (id) => {
     try {
-      const { product, item } = await cartService.add(id);
+      const { product, item } = await addItem(id);
 
       setCart((prevState) => {
         let quantityUpdated = false;
@@ -123,7 +130,7 @@ const App = () => {
 
   const handleCheckout = async () => {
     try {
-      await cartService.clear();
+      await clearCart();
 
       setCart([]);
     } catch(error) {
